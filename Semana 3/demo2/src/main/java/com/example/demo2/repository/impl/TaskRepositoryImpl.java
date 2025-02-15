@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Component;
+
 import com.example.demo2.model.Task;
 import com.example.demo2.repository.ITaskRepository;
 
+@Component("taskRepositoryImpl")
 public class TaskRepositoryImpl implements ITaskRepository{
 
     private List<Task> tasks = new ArrayList<>();

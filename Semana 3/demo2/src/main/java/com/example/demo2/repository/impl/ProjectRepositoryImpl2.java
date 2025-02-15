@@ -12,22 +12,21 @@ import com.example.demo2.model.Project;
 import com.example.demo2.repository.IProjectRepository;
 import com.example.demo2.repository.ITaskRepository;
 
-// @Component("projectRepositoryImpl")
 @Component
-public class ProjectRepositoryImpl implements IProjectRepository{
-
+public class ProjectRepositoryImpl2 implements IProjectRepository{
+    
     private List<Project> projects = new ArrayList<>();
     private ITaskRepository taskRepository;
 
     @Value("#{'production'.equals('${app.environment}')}")
     private boolean isProduction;
 
-    public ProjectRepositoryImpl() {
+    public ProjectRepositoryImpl2() {
         super();
     }
 
     @Autowired
-    public ProjectRepositoryImpl(ITaskRepository taskRepository) {
+    public ProjectRepositoryImpl2(ITaskRepository taskRepository) {
         super();
         this.taskRepository = taskRepository;
     }
