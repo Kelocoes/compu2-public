@@ -1,4 +1,4 @@
--- Inserts for Project
+-- -- Inserts for Project
 INSERT INTO project(name, date_created) VALUES ('Project Alpha', '2020-01-15');
 INSERT INTO project(name, date_created) VALUES ('Project Beta', '2021-03-22');
 INSERT INTO project(name, date_created) VALUES ('Project Gamma', '2022-05-10');
@@ -21,3 +21,5 @@ INSERT INTO task(name, description, date_created, due_date, status, project_id) 
 INSERT INTO task(name, description, date_created, due_date, status, project_id) VALUES ('Task 8', 'Description for Task 8', '2021-02-19', '2021-03-19', 3, 8);
 INSERT INTO task(name, description, date_created, due_date, status, project_id) VALUES ('Task 9', 'Description for Task 9', '2022-04-26', '2022-05-26', 0, 9);
 INSERT INTO task(name, description, date_created, due_date, status, project_id) VALUES ('Task 10', 'Description for Task 10', '2020-06-13', '2020-07-13', 1, 10);
+
+

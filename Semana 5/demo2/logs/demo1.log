@@ -1297,3 +1297,129 @@ Caused by: jakarta.persistence.TransactionRequiredException: Executing an update
 2025-03-01 17:12:48.324  INFO 20340 --- [demo1] [main] com.example.demo1.Demo1Application       : No active profile set, falling back to 1 default profile: "default"
 2025-03-01 17:12:51.028  WARN 20340 --- [demo1] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
 2025-03-01 17:12:51.253  INFO 20340 --- [demo1] [main] com.example.demo1.Demo1Application       : Started Demo1Application in 3.256 seconds (process running for 3.526)
+2025-03-01 17:24:27.994  INFO 18792 --- [demo1] [main] com.example.demo1.Demo1Application       : Starting Demo1Application using Java 17.0.11 with PID 18792 (E:\Kevin\De Kevin\Universidad\Posgrado\Compunet 2\Compunet 2 Curso 2025\compu2-public\Semana 5\demo2\build\classes\java\main started by Kelocoes in E:\Kevin\De Kevin\Universidad\Posgrado\Compunet 2\Compunet 2 Curso 2025\compu2-public\Semana 5\demo2)
+2025-03-01 17:24:27.995 DEBUG 18792 --- [demo1] [main] com.example.demo1.Demo1Application       : Running with Spring Boot v3.4.3, Spring v6.2.3
+2025-03-01 17:24:27.996  INFO 18792 --- [demo1] [main] com.example.demo1.Demo1Application       : No active profile set, falling back to 1 default profile: "default"
+2025-03-01 17:24:30.790  WARN 18792 --- [demo1] [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'demo1Application': Invocation of init method failed
+2025-03-01 17:24:30.813 ERROR 18792 --- [demo1] [main] o.s.boot.SpringApplication               : Application run failed
+
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'demo1Application': Invocation of init method failed
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeInitialization(InitDestroyAnnotationBeanPostProcessor.java:222) ~[spring-beans-6.2.3.jar:6.2.3]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsBeforeInitialization(AbstractAutowireCapableBeanFactory.java:423) ~[spring-beans-6.2.3.jar:6.2.3]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1804) ~[spring-beans-6.2.3.jar:6.2.3]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:601) ~[spring-beans-6.2.3.jar:6.2.3]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:523) ~[spring-beans-6.2.3.jar:6.2.3]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339) ~[spring-beans-6.2.3.jar:6.2.3]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:346) ~[spring-beans-6.2.3.jar:6.2.3]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337) ~[spring-beans-6.2.3.jar:6.2.3]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202) ~[spring-beans-6.2.3.jar:6.2.3]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1155) ~[spring-beans-6.2.3.jar:6.2.3]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1121) ~[spring-beans-6.2.3.jar:6.2.3]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1056) ~[spring-beans-6.2.3.jar:6.2.3]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:987) ~[spring-context-6.2.3.jar:6.2.3]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627) ~[spring-context-6.2.3.jar:6.2.3]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.4.3.jar:3.4.3]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752) ~[spring-boot-3.4.3.jar:3.4.3]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439) ~[spring-boot-3.4.3.jar:3.4.3]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318) ~[spring-boot-3.4.3.jar:3.4.3]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361) ~[spring-boot-3.4.3.jar:3.4.3]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350) ~[spring-boot-3.4.3.jar:3.4.3]
+	at com.example.demo1.Demo1Application.main(Demo1Application.java:30) ~[main/:na]
+Caused by: org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role: com.example.demo1.model.Task.taskWorkers: could not initialize proxy - no Session
+	at org.hibernate.collection.spi.AbstractPersistentCollection.throwLazyInitializationException(AbstractPersistentCollection.java:635) ~[hibernate-core-6.6.8.Final.jar:6.6.8.Final]
+	at org.hibernate.collection.spi.AbstractPersistentCollection.withTemporarySessionIfNeeded(AbstractPersistentCollection.java:219) ~[hibernate-core-6.6.8.Final.jar:6.6.8.Final]
+	at org.hibernate.collection.spi.AbstractPersistentCollection.initialize(AbstractPersistentCollection.java:614) ~[hibernate-core-6.6.8.Final.jar:6.6.8.Final]
+	at org.hibernate.collection.spi.AbstractPersistentCollection.read(AbstractPersistentCollection.java:138) ~[hibernate-core-6.6.8.Final.jar:6.6.8.Final]
+	at org.hibernate.collection.spi.PersistentBag.toString(PersistentBag.java:587) ~[hibernate-core-6.6.8.Final.jar:6.6.8.Final]
+	at java.base/java.lang.StringConcatHelper.stringOf(StringConcatHelper.java:453) ~[na:na]
+	at com.example.demo1.model.Task.toString(Task.java:21) ~[main/:na]
+	at com.example.demo1.Demo1Application.lambda$PostConstruct$1(Demo1Application.java:45) ~[main/:na]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511) ~[na:na]
+	at com.example.demo1.Demo1Application.PostConstruct(Demo1Application.java:45) ~[main/:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleMethod.invoke(InitDestroyAnnotationBeanPostProcessor.java:457) ~[spring-beans-6.2.3.jar:6.2.3]
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleMetadata.invokeInitMethods(InitDestroyAnnotationBeanPostProcessor.java:401) ~[spring-beans-6.2.3.jar:6.2.3]
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeInitialization(InitDestroyAnnotationBeanPostProcessor.java:219) ~[spring-beans-6.2.3.jar:6.2.3]
+	... 20 common frames omitted
+
+2025-03-01 17:26:03.932  INFO 6440 --- [demo1] [main] com.example.demo1.Demo1Application       : Starting Demo1Application using Java 17.0.11 with PID 6440 (E:\Kevin\De Kevin\Universidad\Posgrado\Compunet 2\Compunet 2 Curso 2025\compu2-public\Semana 5\demo2\build\classes\java\main started by Kelocoes in E:\Kevin\De Kevin\Universidad\Posgrado\Compunet 2\Compunet 2 Curso 2025\compu2-public\Semana 5\demo2)
+2025-03-01 17:26:03.934 DEBUG 6440 --- [demo1] [main] com.example.demo1.Demo1Application       : Running with Spring Boot v3.4.3, Spring v6.2.3
+2025-03-01 17:26:03.934  INFO 6440 --- [demo1] [main] com.example.demo1.Demo1Application       : No active profile set, falling back to 1 default profile: "default"
+2025-03-01 17:26:06.669  WARN 6440 --- [demo1] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-03-01 17:26:06.889  INFO 6440 --- [demo1] [main] com.example.demo1.Demo1Application       : Started Demo1Application in 3.266 seconds (process running for 3.553)
+2025-03-01 17:27:37.870  INFO 10352 --- [demo1] [main] com.example.demo1.Demo1Application       : Starting Demo1Application using Java 17.0.11 with PID 10352 (E:\Kevin\De Kevin\Universidad\Posgrado\Compunet 2\Compunet 2 Curso 2025\compu2-public\Semana 5\demo2\build\classes\java\main started by Kelocoes in E:\Kevin\De Kevin\Universidad\Posgrado\Compunet 2\Compunet 2 Curso 2025\compu2-public\Semana 5\demo2)
+2025-03-01 17:27:37.871 DEBUG 10352 --- [demo1] [main] com.example.demo1.Demo1Application       : Running with Spring Boot v3.4.3, Spring v6.2.3
+2025-03-01 17:27:37.872  INFO 10352 --- [demo1] [main] com.example.demo1.Demo1Application       : No active profile set, falling back to 1 default profile: "default"
+2025-03-01 17:27:39.208  WARN 10352 --- [demo1] [main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-03-01 17:27:40.644  WARN 10352 --- [demo1] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-03-01 17:27:40.862  INFO 10352 --- [demo1] [main] com.example.demo1.Demo1Application       : Started Demo1Application in 3.304 seconds (process running for 3.581)
+2025-03-01 17:29:15.933  INFO 14156 --- [demo1] [main] com.example.demo1.Demo1Application       : Starting Demo1Application using Java 17.0.11 with PID 14156 (E:\Kevin\De Kevin\Universidad\Posgrado\Compunet 2\Compunet 2 Curso 2025\compu2-public\Semana 5\demo2\build\classes\java\main started by Kelocoes in E:\Kevin\De Kevin\Universidad\Posgrado\Compunet 2\Compunet 2 Curso 2025\compu2-public\Semana 5\demo2)
+2025-03-01 17:29:15.934 DEBUG 14156 --- [demo1] [main] com.example.demo1.Demo1Application       : Running with Spring Boot v3.4.3, Spring v6.2.3
+2025-03-01 17:29:15.935  INFO 14156 --- [demo1] [main] com.example.demo1.Demo1Application       : No active profile set, falling back to 1 default profile: "default"
+2025-03-01 17:29:17.256  WARN 14156 --- [demo1] [main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-03-01 17:29:18.689  WARN 14156 --- [demo1] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-03-01 17:29:18.899  INFO 14156 --- [demo1] [main] com.example.demo1.Demo1Application       : Started Demo1Application in 3.299 seconds (process running for 3.563)
+2025-03-01 17:29:42.175  INFO 9632 --- [demo1] [main] com.example.demo1.Demo1Application       : Starting Demo1Application using Java 17.0.11 with PID 9632 (E:\Kevin\De Kevin\Universidad\Posgrado\Compunet 2\Compunet 2 Curso 2025\compu2-public\Semana 5\demo2\build\classes\java\main started by Kelocoes in E:\Kevin\De Kevin\Universidad\Posgrado\Compunet 2\Compunet 2 Curso 2025\compu2-public\Semana 5\demo2)
+2025-03-01 17:29:42.177 DEBUG 9632 --- [demo1] [main] com.example.demo1.Demo1Application       : Running with Spring Boot v3.4.3, Spring v6.2.3
+2025-03-01 17:29:42.178  INFO 9632 --- [demo1] [main] com.example.demo1.Demo1Application       : No active profile set, falling back to 1 default profile: "default"
+2025-03-01 17:29:43.516  WARN 9632 --- [demo1] [main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-03-01 17:29:45.059  WARN 9632 --- [demo1] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-03-01 17:29:45.273  INFO 9632 --- [demo1] [main] com.example.demo1.Demo1Application       : Started Demo1Application in 3.427 seconds (process running for 3.698)
+2025-03-01 17:31:28.391  INFO 20220 --- [demo1] [main] com.example.demo1.Demo1Application       : Starting Demo1Application using Java 17.0.11 with PID 20220 (E:\Kevin\De Kevin\Universidad\Posgrado\Compunet 2\Compunet 2 Curso 2025\compu2-public\Semana 5\demo2\build\classes\java\main started by Kelocoes in E:\Kevin\De Kevin\Universidad\Posgrado\Compunet 2\Compunet 2 Curso 2025\compu2-public\Semana 5\demo2)
+2025-03-01 17:31:28.392 DEBUG 20220 --- [demo1] [main] com.example.demo1.Demo1Application       : Running with Spring Boot v3.4.3, Spring v6.2.3
+2025-03-01 17:31:28.393  INFO 20220 --- [demo1] [main] com.example.demo1.Demo1Application       : No active profile set, falling back to 1 default profile: "default"
+2025-03-01 17:31:29.722  WARN 20220 --- [demo1] [main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-03-01 17:31:31.139  WARN 20220 --- [demo1] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-03-01 17:31:31.309  WARN 20220 --- [demo1] [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'dataSourceScriptDatabaseInitializer' defined in class path resource [org/springframework/boot/autoconfigure/sql/init/DataSourceInitializationConfiguration.class]: Failed to execute database script from resource [file [E:\Kevin\De Kevin\Universidad\Posgrado\Compunet 2\Compunet 2 Curso 2025\compu2-public\Semana 5\demo2\build\resources\main\data.sql]]
+2025-03-01 17:31:31.345 ERROR 20220 --- [demo1] [main] o.s.boot.SpringApplication               : Application run failed
+
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'dataSourceScriptDatabaseInitializer' defined in class path resource [org/springframework/boot/autoconfigure/sql/init/DataSourceInitializationConfiguration.class]: Failed to execute database script from resource [file [E:\Kevin\De Kevin\Universidad\Posgrado\Compunet 2\Compunet 2 Curso 2025\compu2-public\Semana 5\demo2\build\resources\main\data.sql]]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1812) ~[spring-beans-6.2.3.jar:6.2.3]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:601) ~[spring-beans-6.2.3.jar:6.2.3]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:523) ~[spring-beans-6.2.3.jar:6.2.3]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339) ~[spring-beans-6.2.3.jar:6.2.3]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:346) ~[spring-beans-6.2.3.jar:6.2.3]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337) ~[spring-beans-6.2.3.jar:6.2.3]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202) ~[spring-beans-6.2.3.jar:6.2.3]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:315) ~[spring-beans-6.2.3.jar:6.2.3]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202) ~[spring-beans-6.2.3.jar:6.2.3]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1155) ~[spring-beans-6.2.3.jar:6.2.3]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1121) ~[spring-beans-6.2.3.jar:6.2.3]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1056) ~[spring-beans-6.2.3.jar:6.2.3]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:987) ~[spring-context-6.2.3.jar:6.2.3]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627) ~[spring-context-6.2.3.jar:6.2.3]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.4.3.jar:3.4.3]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752) ~[spring-boot-3.4.3.jar:3.4.3]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439) ~[spring-boot-3.4.3.jar:3.4.3]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318) ~[spring-boot-3.4.3.jar:3.4.3]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361) ~[spring-boot-3.4.3.jar:3.4.3]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350) ~[spring-boot-3.4.3.jar:3.4.3]
+	at com.example.demo1.Demo1Application.main(Demo1Application.java:30) ~[main/:na]
+Caused by: org.springframework.jdbc.datasource.init.UncategorizedScriptException: Failed to execute database script from resource [file [E:\Kevin\De Kevin\Universidad\Posgrado\Compunet 2\Compunet 2 Curso 2025\compu2-public\Semana 5\demo2\build\resources\main\data.sql]]
+	at org.springframework.jdbc.datasource.init.ScriptUtils.executeSqlScript(ScriptUtils.java:305) ~[spring-jdbc-6.2.3.jar:6.2.3]
+	at org.springframework.jdbc.datasource.init.ResourceDatabasePopulator.populate(ResourceDatabasePopulator.java:254) ~[spring-jdbc-6.2.3.jar:6.2.3]
+	at org.springframework.jdbc.datasource.init.DatabasePopulatorUtils.execute(DatabasePopulatorUtils.java:54) ~[spring-jdbc-6.2.3.jar:6.2.3]
+	at org.springframework.boot.jdbc.init.DataSourceScriptDatabaseInitializer.runScripts(DataSourceScriptDatabaseInitializer.java:87) ~[spring-boot-3.4.3.jar:3.4.3]
+	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.runScripts(AbstractScriptDatabaseInitializer.java:146) ~[spring-boot-3.4.3.jar:3.4.3]
+	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.applyScripts(AbstractScriptDatabaseInitializer.java:108) ~[spring-boot-3.4.3.jar:3.4.3]
+	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.applyDataScripts(AbstractScriptDatabaseInitializer.java:102) ~[spring-boot-3.4.3.jar:3.4.3]
+	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.initializeDatabase(AbstractScriptDatabaseInitializer.java:77) ~[spring-boot-3.4.3.jar:3.4.3]
+	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.afterPropertiesSet(AbstractScriptDatabaseInitializer.java:66) ~[spring-boot-3.4.3.jar:3.4.3]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1859) ~[spring-beans-6.2.3.jar:6.2.3]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1808) ~[spring-beans-6.2.3.jar:6.2.3]
+	... 20 common frames omitted
+Caused by: java.lang.IllegalArgumentException: 'script' must not be null or empty
+	at org.springframework.util.Assert.hasText(Assert.java:253) ~[spring-core-6.2.3.jar:6.2.3]
+	at org.springframework.jdbc.datasource.init.ScriptUtils.splitSqlScript(ScriptUtils.java:475) ~[spring-jdbc-6.2.3.jar:6.2.3]
+	at org.springframework.jdbc.datasource.init.ScriptUtils.executeSqlScript(ScriptUtils.java:252) ~[spring-jdbc-6.2.3.jar:6.2.3]
+	... 30 common frames omitted
+
+2025-03-01 17:31:44.592  INFO 23212 --- [demo1] [main] com.example.demo1.Demo1Application       : Starting Demo1Application using Java 17.0.11 with PID 23212 (E:\Kevin\De Kevin\Universidad\Posgrado\Compunet 2\Compunet 2 Curso 2025\compu2-public\Semana 5\demo2\build\classes\java\main started by Kelocoes in E:\Kevin\De Kevin\Universidad\Posgrado\Compunet 2\Compunet 2 Curso 2025\compu2-public\Semana 5\demo2)
+2025-03-01 17:31:44.593 DEBUG 23212 --- [demo1] [main] com.example.demo1.Demo1Application       : Running with Spring Boot v3.4.3, Spring v6.2.3
+2025-03-01 17:31:44.594  INFO 23212 --- [demo1] [main] com.example.demo1.Demo1Application       : No active profile set, falling back to 1 default profile: "default"
+2025-03-01 17:31:45.934  WARN 23212 --- [demo1] [main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-03-01 17:31:47.370  WARN 23212 --- [demo1] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-03-01 17:31:47.585  INFO 23212 --- [demo1] [main] com.example.demo1.Demo1Application       : Started Demo1Application in 3.302 seconds (process running for 3.581)
