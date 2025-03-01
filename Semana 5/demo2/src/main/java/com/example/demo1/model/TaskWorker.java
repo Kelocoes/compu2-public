@@ -1,5 +1,6 @@
 package com.example.demo1.model;
 
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,9 +17,8 @@ import lombok.NoArgsConstructor;
 @Table(name = "task_worker")
 public class TaskWorker {
     
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @EmbeddedId
+    private TaskWorkerPK id;
 
     @ManyToOne
     @JoinColumn(name = "task_id", nullable = false)
