@@ -3,8 +3,11 @@ package com.example.demo1.service.impl;
 import org.springframework.stereotype.Service;
 
 import com.example.demo1.model.Task;
+import com.example.demo1.model.TaskStatus;
 import com.example.demo1.repository.ITaskRepository;
 import com.example.demo1.service.ITaskService;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class TaskServiceImpl implements ITaskService{
@@ -26,4 +29,21 @@ public class TaskServiceImpl implements ITaskService{
         // throw new UnsupportedOperationException("Not implemented yet");
     }
     
+    @Override
+    @Transactional
+    public int deleteTaskByProjectId(Long projectId) {
+        return taskRepository.deleteTaskByProjectId(projectId);
+    }
+
+    @Override
+    @Transactional
+    public int deleteCompletedTasks() {
+        return taskRepository.deleteCompletedTasks();
+    }
+
+    @Override
+    @Transactional
+    public int updateTaskStatus(Long taskId, TaskStatus status) {
+        return taskRepository.updateTaskStatus(taskId, status);
+    }
 }

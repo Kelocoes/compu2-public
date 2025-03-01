@@ -64,4 +64,39 @@ public class ProjectServiceImpl implements IProjectService{
         
         save(newProject);
     }
+
+    @Override
+    public List<Project> findByDateCreatedGreaterThan(LocalDate dateCreated) {
+        return projectRepository.findByDateCreatedGreaterThan(dateCreated);
+    }
+
+    @Override
+    public List<Project> findByDateCreatedLessThan(LocalDate dateCreated) {
+        return projectRepository.findByDateCreatedLessThan(dateCreated);
+    }
+
+    @Override
+    public List<Project> findByDateCreatedLessThanEqual(LocalDate dateCreated) {
+        return projectRepository.findByDateCreatedLessThanEqual(dateCreated);
+    }
+
+    @Override
+    public List<List<Integer>> countByYearCreated() {
+        return projectRepository.countByYearCreated();
+    }
+
+    @Override
+    public List<Project> findByNameNative(String name) {
+        return projectRepository.findByNameNative(name);
+    }
+
+    @Override
+    public List<Project> findByIdIn(List<Long> ids) {
+        return projectRepository.findByIdIn(ids);
+    }
+
+    @Override
+    public List<Project> findByNameParam(String name) {
+        return projectRepository.findByNameParam(name);
+    }
 }
