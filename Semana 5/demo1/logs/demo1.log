@@ -1,5 +1,0 @@
-2025-02-22 16:04:10.425  INFO 28008 --- [demo1] [main] com.example.demo1.Demo1Application       : Starting Demo1Application using Java 17.0.11 with PID 28008 (E:\Kevin\De Kevin\Universidad\Posgrado\Compunet 2\Compunet 2 Curso 2025\compu2-public\Semana 4\demo1\build\classes\java\main started by Kelocoes in E:\Kevin\De Kevin\Universidad\Posgrado\Compunet 2\Compunet 2 Curso 2025\compu2-public\Semana 4\demo1)
-2025-02-22 16:04:10.427 DEBUG 28008 --- [demo1] [main] com.example.demo1.Demo1Application       : Running with Spring Boot v3.4.3, Spring v6.2.3
-2025-02-22 16:04:10.427  INFO 28008 --- [demo1] [main] com.example.demo1.Demo1Application       : No active profile set, falling back to 1 default profile: "default"
-2025-02-22 16:04:14.399  WARN 28008 --- [demo1] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-02-22 16:04:14.811  INFO 28008 --- [demo1] [main] com.example.demo1.Demo1Application       : Started Demo1Application in 4.925 seconds (process running for 5.627)
