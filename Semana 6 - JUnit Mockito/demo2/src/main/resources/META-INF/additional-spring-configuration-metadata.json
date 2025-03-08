@@ -1,0 +1,22 @@
+{"properties": [
+  {
+    "name": "app.environment",
+    "type": "java.lang.String",
+    "description": "A description for 'app.environment'"
+  },
+  {
+    "name": "app.environment",
+    "type": "java.lang.String",
+    "description": "A description for 'app.environment'"
+  },
+  {
+    "name": "app.environment",
+    "type": "java.lang.String",
+    "description": "A description for 'app.environment'"
+  },
+  {
+    "name": "app.environment",
+    "type": "java.lang.String",
+    "description": "A description for 'app.environment'"
+  }
+]}
