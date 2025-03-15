@@ -1,0 +1,10 @@
+2025-03-15 16:20:00.344  INFO 11804 --- [demo1] [main] com.example.demo1.ProjectServiceTest     : Starting ProjectServiceTest using Java 17.0.11 with PID 11804 (started by Kelocoes in E:\Kevin\De Kevin\Universidad\Posgrado\Compunet 2\Compunet 2 Curso 2025\compu2-public\Semana 7 - Mockito - MVC\demo2)
+2025-03-15 16:20:00.350 DEBUG 11804 --- [demo1] [main] com.example.demo1.ProjectServiceTest     : Running with Spring Boot v3.4.3, Spring v6.2.3
+2025-03-15 16:20:00.351  INFO 11804 --- [demo1] [main] com.example.demo1.ProjectServiceTest     : The following 1 profile is active: "test"
+2025-03-15 16:20:03.500  WARN 11804 --- [demo1] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-03-15 16:20:03.823  INFO 11804 --- [demo1] [main] com.example.demo1.ProjectServiceTest     : Started ProjectServiceTest in 3.764 seconds (process running for 4.545)
+2025-03-15 16:20:29.545  INFO 20752 --- [demo1] [main] c.example.demo1.Demo1ApplicationTests    : Starting Demo1ApplicationTests using Java 17.0.11 with PID 20752 (started by Kelocoes in E:\Kevin\De Kevin\Universidad\Posgrado\Compunet 2\Compunet 2 Curso 2025\compu2-public\Semana 7 - Mockito - MVC\demo2)
+2025-03-15 16:20:29.546 DEBUG 20752 --- [demo1] [main] c.example.demo1.Demo1ApplicationTests    : Running with Spring Boot v3.4.3, Spring v6.2.3
+2025-03-15 16:20:29.546  INFO 20752 --- [demo1] [main] c.example.demo1.Demo1ApplicationTests    : The following 1 profile is active: "test"
+2025-03-15 16:20:32.689  WARN 20752 --- [demo1] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-03-15 16:20:32.985  INFO 20752 --- [demo1] [main] c.example.demo1.Demo1ApplicationTests    : Started Demo1ApplicationTests in 3.681 seconds (process running for 4.488)
