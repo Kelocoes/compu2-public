@@ -1,55 +1,53 @@
 # Guía de Etiquetas Thymeleaf y Manipulación de Información en el Controller
 
 ## Etiquetas Thymeleaf más Utilizadas en HTML
+En este pequeño diccionario podrás encontrar algunas de las anotaciones, configuraciones y etiquetas más utilizadas al trabajar con Thymeleaf.
 
-1. **th:text**
+1. **th:text**: Muestra el contenido de una variable en el HTML.
     ```html
     <p th:text="${variable}">Texto por defecto</p>
+    <p>
     ```
-    - Muestra el contenido de una variable en el HTML.
 
-2. **th:if / th:unless**
+2. **th:if / th:unless**: Renderiza el contenido basado en una condición.
     ```html
     <div th:if="${condition}">Contenido si la condición es verdadera</div>
     <div th:unless="${condition}">Contenido si la condición es falsa</div>
     ```
-    - Renderiza el contenido basado en una condición.
 
-3. **th:each**
+3. **th:each**: Itera sobre una colección de elementos.
     ```html
     <ul>
          <li th:each="item : ${items}" th:text="${item}">Elemento</li>
     </ul>
     ```
-    - Itera sobre una colección de elementos.
 
-4. **th:href**
+4. **th:href**: Genera enlaces dinámicos.
     ```html
     <a th:href="@{/ruta}">Enlace</a>
     ```
-    - Genera enlaces dinámicos.
 
-5. **th:src**
+5. **th:src**: Establece la fuente de una imagen.
     ```html
     <img th:src="@{/imagenes/logo.png}" alt="Logo">
     ```
-    - Establece la fuente de una imagen.
 
-6. **th:action**
+6. **th:action**: Define la acción de un formulario.
     ```html
     <form th:action="@{/submit}" method="post">
-         <!-- Campos del formulario -->
+        <input type="text" name="nombre">
+        <button type="submit">Enviar</button>
     </form>
-    ```
-    - Define la acción de un formulario.
+    ``` 
 
-7. **th:value**
+7. **th:value**: Establece el valor de un campo de entrada.
     ```html
     <input type="text" th:value="${variable}">
     ```
-    - Establece el valor de un campo de entrada.
 
 ## Manipulación de Información en el Controller
+
+Aquí encontrarás algunos ejemplos de cómo manipular información en el controlador de Spring Boot. Recuerda anotar el controlador con la anotación `@Controller` y devolver el nombre de la vista en el método.
 
 1. **Recibir Datos del Formulario**
     ```java
@@ -150,3 +148,63 @@
         ...
     }
     ```
+
+
+## Explicación de las diferentes anotaciones que puedes encontrar en Spring MVC
+
+1. **@Controller**: Anotación que indica que la clase es un controlador de Spring MVC, uno de sus parámetros es `value` que permite asignar un nombre al controlador.
+    ```java
+    @Controller
+    public class Controlador {
+        ...
+    }
+    ```
+
+2. **@GetMapping**: Anotación que mapea una petición GET a un método del controlador, uno de sus parámetros es `value` que permite asignar la ruta de la petición.
+    ```java
+    @GetMapping("/ruta")
+    public String metodo() {
+        ...
+    }
+    ```
+
+3. **@PostMapping**: Anotación que mapea una petición POST a un método del controlador, uno de sus parámetros es `value` que permite asignar la ruta de la petición.
+    ```java
+    @PostMapping("/ruta")
+    public String metodo() {
+        ...
+    }
+    ```
+
+4. **@ModelAttribute**: Anotación que enlaza un método con un atributo del modelo, uno de sus parámetros es `value` que permite asignar un nombre al atributo.
+    ```java
+    @PostMapping("/guardar")
+    public String guardarElemento(@ModelAttribute("elemento") Elemento elemento, Model model) {
+        ...
+    }
+    ```
+    
+    4.1 Si no especificas el nombre del atributo, se utilizará el nombre de la clase en minúsculas.
+    ```java
+    @PostMapping("/guardar")
+    public String guardarElemento(@ModelAttribute Elemento elemento, Model model) {
+        ...
+    }
+    ```
+
+5. **@RequestParam**: Anotación que enlaza un parámetro de la petición con un parámetro del método, uno de sus parámetros es `value` que permite asignar el nombre del parámetro.
+    ```java
+    @GetMapping("/ruta")
+    public String metodo(@RequestParam("parametro") String parametro) {
+        ...
+    }
+    ```
+
+6. **@PathVariable**: Anotación que enlaza una variable de la ruta con un parámetro del método, uno de sus parámetros es `value` que permite asignar el nombre de la variable.
+    ```java
+    @GetMapping("/ruta/{variable}")
+    public String metodo(@PathVariable("variable") String variable) {
+        ...
+    }
+    ```
+
