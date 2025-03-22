@@ -1,6 +1,10 @@
 ### Guía para el uso del módulo de Spring Security en Spring Boot
 
-1. Agregar al pom o manejardor de dependencias de Spring Boot el siguiente código:
+Para poder seguir de la mejor manera esta guía, te recomiendo empezar con el proyecto de Spring Boot que se encuentra en este enlace:
+[Enlace de repositorio antes de Security](https://drive.google.com/file/d/17hJJ6hep5PHRg8BF6Dxmkakgk7-Pbbqw/view?usp=sharing)
+A pesar de hecho, esta guía podría serte útil para la configuración de Spring Security en cualquier proyecto de Spring Boot.
+
+1. Para iniciar con Spring Security, es necesario agregar al Pom del proyecto el siguiente código:
 ```xml
     <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -10,7 +14,7 @@
 
 2. Ejecuta el comando `mvn clean install` para instalar las dependencias.
 
-3. Ejecuta el comando `mvn spring-boot:run` para correr la aplicación. A partir de agregar la dependencia de Spring Security, la aplicación se bloqueará y pedirá un usuario y contraseña. Por defecto, Spring Security crea un usuario llamado `user` y una contraseña aleatoria que se muestra en la consola al iniciar la aplicación.
+3. Ejecuta el comando `mvn spring-boot:run` para correr la aplicación. A partir de agregar la dependencia de Spring Security, la aplicación se bloqueará ante cualquier solicitud y pedirá un usuario y contraseña. Por defecto, Spring Security crea un usuario llamado `user` y una contraseña aleatoria que se muestra en la consola al iniciar la aplicación.
 
 4. Intenta hacer una solicitud para obtener la información de la aplicación, por ejemplo intenta ingresar a `http://localhost:8080/projects`. Spring Security bloqueará la solicitud y pedirá un usuario y contraseña.
 
@@ -42,7 +46,7 @@ public class WebSecurityConfig {
 ```java
     public PasswordEncoder passwordEncoder() {
         return NoOpPasswordEncoder.getInstance(); // No usar para prod
-        // return new BCryptPasswordEncoder();
+        // return new BCryptPasswordEncoder(); // Más recomendable y generalmente usado, no usar si aún no has hecho el proceso de encriptación
     }
 ```
 
@@ -50,7 +54,7 @@ public class WebSecurityConfig {
 
 #### Custom UserDetailsService
 
-8. Crear una carpeta en service para los aspectos de autenticación, y ahí crear el CustomDetailsService.
+8. Crear una carpeta en service para los aspectos de autenticación, y ahí crear el CustomDetailsService. El cual nos permitirá buscar un usuario en la base de datos por su nombre de usuario y no quemar el usuario y contraseña en el código.
 
 ```java
 public class CustomUserDetailsService implements UserDetailsService {
@@ -72,7 +76,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 ```
 
-10. Es importante tener lista nuestra entidad de usuarios hasta este punto con sus repositorios y servicios creados, añadiremos un nuevo servicio que permita buscar un usuario por su nombre de usuario.
+10. Es importante tener lista nuestra entidad de usuarios hasta este punto con sus repositorios y servicios creados, añadiremos un nuevo servicio que permita buscar un usuario por su nombre de usuario (si aún no ha sido especificado)
 
 ```java
 @Service
@@ -132,7 +136,7 @@ public class SecurityUser implements UserDetails{
 }
 ```
 
-13. Ahora, en nuestro CustomUserDetailsService, debemos de retornar una instancia de SecurityUser en el método `loadUserByUsername`.
+13. Ahora, en nuestro `CustomUserDetailsService` ya podremos retornar una instancia de SecurityUser en el método `loadUserByUsername`.
 
 ```java
     @Override
@@ -177,7 +181,7 @@ public class SecurityAuthority implements GrantedAuthority{
 
 Nota: Aquí lanzará un error respecto al Lazy Loading, estamos intentando obtener algo fuera del contexto de hibernate, por favor solucionalo :)
 
-16. Después de realizar todo hasta este punto, ya deberías de poder autenticarte con un usuario y contraseña que se encuentre en la base de datos. Pero además de eso, imprime antes de enviar la respuesta al usuario las autoridades, y comprueba que tenga todas las autorities asignadas a ese usuario:
+16. Después de realizar todo hasta este punto, ya deberías de poder autenticarte con un usuario y contraseña que se encuentre en la base de datos. Pero además de eso, imprime antes de enviar la respuesta al usuario las `authorities`, y comprueba que tenga todas las autorities asignadas a ese usuario:
 
 ```java
     @GetMapping
