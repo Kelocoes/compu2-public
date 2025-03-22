@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Página de Inicio</title>
+    <link rel="stylesheet" th:href="@{projects/css/project.css}" />
+</head>
+<body>
+    <h1 th:text="${title}">Mensaje por defecto</h1>
+
+    <form th:action="@{/projects/create}" method="post" th:object="${project}">
+        <input type="text" name="name" placeholder="Project Name" />
+        <input type="date" name="dateCreated" />
+        <button type="submit">Create Project</button>
+    </form>
+
+    <form th:action="@{/projects/findByName}" method="post">
+        <input type="text" name="name" placeholder="Enter project name" />
+        <button type="submit">Find Project</button>
+    </form>
+
+    <h2>Projects List</h2>
+    <div th:each="project : ${projects}">
+        <p>ID: <span th:text="${project.id}">Project ID</span></p>
+        <p>Name: <span th:text="${project.name}">Project Name</span></p>
+        <p>DateCreated: <span th:text="${project.dateCreated}">Project DateCreated</span></p>
+        <a th:href="@{'/projects/' + ${project.id}}">View Project</a>
+    </div>
+
+    <script th:src="@{projects/js/project.js}"></script>
+</body>
+</html>
