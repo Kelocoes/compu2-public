@@ -3,3 +3,14 @@
 2025-03-22 13:57:30.441  INFO 4740 --- [demo1] [main] c.example.demo1.Demo1ApplicationTests    : The following 1 profile is active: "test"
 2025-03-22 13:57:33.467  WARN 4740 --- [demo1] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
 2025-03-22 13:57:33.786  INFO 4740 --- [demo1] [main] c.example.demo1.Demo1ApplicationTests    : Started Demo1ApplicationTests in 3.599 seconds (process running for 4.375)
+2025-03-22 15:09:21.763  INFO 10752 --- [demo1] [main] c.example.demo1.Demo1ApplicationTests    : Starting Demo1ApplicationTests using Java 17.0.11 with PID 10752 (started by Kelocoes in E:\Kevin\De Kevin\Universidad\Posgrado\Compunet 2\Compunet 2 Curso 2025\compu2-public\Semana 9 - Security MVC\demo-sesion2)
+2025-03-22 15:09:21.765 DEBUG 10752 --- [demo1] [main] c.example.demo1.Demo1ApplicationTests    : Running with Spring Boot v3.4.3, Spring v6.2.3
+2025-03-22 15:09:21.765  INFO 10752 --- [demo1] [main] c.example.demo1.Demo1ApplicationTests    : The following 1 profile is active: "test"
+2025-03-22 15:09:24.995  WARN 10752 --- [demo1] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-03-22 15:09:25.388  WARN 10752 --- [demo1] [main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 08bb0f77-5edc-4ffd-a9f9-ca44d34483b4
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2025-03-22 15:09:25.551  INFO 10752 --- [demo1] [main] c.example.demo1.Demo1ApplicationTests    : Started Demo1ApplicationTests in 4.04 seconds (process running for 4.797)

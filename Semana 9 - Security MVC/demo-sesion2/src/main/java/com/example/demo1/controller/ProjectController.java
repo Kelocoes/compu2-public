@@ -1,6 +1,8 @@
 package com.example.demo1.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +27,8 @@ public class ProjectController {
     public String getAllProjects(Model model) {
         model.addAttribute("title", "Listado de proyectos");
         model.addAttribute("projects", projectService.findAll());
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        auth.getAuthorities().forEach(authority -> System.out.println(authority.getAuthority()));
         return "projects/projectsList";
     }
 

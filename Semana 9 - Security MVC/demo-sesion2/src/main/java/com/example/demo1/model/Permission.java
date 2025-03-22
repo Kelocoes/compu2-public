@@ -28,7 +28,7 @@ public class Permission {
     private String name;
     private String description;
 
-    @OneToMany(mappedBy = "permission", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "permission", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<RolePermission> rolePermissions;
 

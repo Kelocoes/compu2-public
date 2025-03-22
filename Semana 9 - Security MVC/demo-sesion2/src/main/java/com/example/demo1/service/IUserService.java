@@ -12,4 +12,6 @@ public interface IUserService {
     Optional<User> findById(Long id);
 
     User save(User user);
+
+    Optional<User> findByUsername(String username);
 }
