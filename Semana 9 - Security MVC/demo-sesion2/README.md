@@ -202,8 +202,8 @@ INSERT INTO users(username, password, email) VALUES ('user1', 'password1', 'emai
 
 
 ### Ilustraciones de referencia
-![alt text](/imagesmd/image.png)
-![alt text1](/imagesmd/image1.png)
-![alt text2](/imagesmd/image2.png)
-![alt text3](/imagesmd/image3.png)
-![alt text4](/imagesmd/image4.png)
+![alt text](imagesmd/image.png)
+![alt text1](imagesmd/image1.png)
+![alt text2](imagesmd/image2.png)
+![alt text3](imagesmd/image3.png)
+![alt text4](imagesmd/image4.png)
