@@ -202,7 +202,305 @@ INSERT INTO users(username, password, email) VALUES ('admin1', 'password1', 'ema
 INSERT INTO users(username, password, email) VALUES ('user1', 'password1', 'emailuser@email.com');
 ```
 
+#### Custom Authentication (Opcional)
 
+Rara vez nos encontraremos con la necesidad de crear nuestro propio proceso de autenticación en Spring Security, por ejemplo cuando no dependemos de un conjunto de usuarios en una base de datos, sino que necesitamos autenticar a los usuarios con un servicio externo o con una clave secreta. Para esto, Spring Security nos permite crear un proceso de autenticación personalizado.
+
+1. Lo primero es crear un archivo de configuración que contenga un bean de tipo `SecurityFilterChain` y dentro de él especificaremos que al momento de llegar al filtro de `UsernamePasswordAuthenticationFilter`, se ejecute nuestro proceso de autenticación personalizado.
+
+```java
+@Configuration
+@AllArgsConstructor
+public class SecurityConfig {
+
+    private final CustomAuthenticationFilter customAuthenticationFilter;
+    private final CustomAuthenticationManager customAuthenticationManager;
+
+    // Autenticación personalizada
+    @Bean
+    public SecurityFilterChain customAuthFilterChain(HttpSecurity http) throws Exception {
+        return http
+            .securityMatcher("/customAuth/**")  // Aplica solo a rutas que comienzan con /customAuth
+            .authenticationManager(customAuthenticationManager)
+            .addFilterBefore(customAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            .authorizeHttpRequests(auth -> auth
+                .anyRequest().authenticated()
+            )
+            .build();
+    }
+
+    // Autenticación por defecto
+    @Bean
+    public SecurityFilterChain defaultFilterChain(HttpSecurity http) throws Exception {
+        return http
+                .securityMatcher("/**")  // Aplica a todas las demás rutas
+                .authenticationManager(customAuthenticationManager)
+                .authorizeHttpRequests(auth -> auth
+                                .anyRequest().authenticated()
+                )
+                .httpBasic(withDefaults())
+                .formLogin(withDefaults())
+                .build();
+    }
+}
+```
+
+2. Ahora, realizaremos la creación del filtro personalizado `CustomAuthenticationFilter` el cual buscará hacer una autenticación diferente a la que hace el `UsernamePasswordAuthenticationFilter`.
+
+```java
+@Component
+public class CustomAuthenticationFilter extends OncePerRequestFilter{
+    // You can also implement the interface Filter and override the method doFilter
+    // But by default, you cannot make the assumption that the filter will be called only once per request
+    // So, you can extend the class OncePerRequestFilter to ensure that the filter is only called once per request
+    
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+
+        filterChain.doFilter(request, response); // Only when authentication worked
+    }
+    
+}
+```
+
+3. Teniendo en cuenta nuestro filtro, es necesario recordar que en los procesos de autenticación en Spring Security existen otros componentes como el `AuthenticationManager` que se encargará de autenticar al usuario. Por lo tanto, es necesario crear un `CustomAuthenticationManager` que implemente la interfaz `AuthenticationManager` e inyectarla en el filtro. 
+
+    3.1 Agregar en la clase de `CustomAuthenticationFilter` la dependencia de `CustomAuthenticationManager` de forma que pueda ser llamada dentro del filtro.
+    ```java
+    @Component
+    public class CustomAuthenticationFilter extends OncePerRequestFilter {
+
+        @Autowired
+        private CustomAuthenticationManager customAuthenticationManager;
+
+        @Override
+        protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+                throws ServletException, IOException {
+            String key = request.getHeader("key");
+
+            if (key != null) {
+                // Custom authentication logic
+                CustomAuthentication customAuthentication = new CustomAuthentication(false, key);
+                Authentication authentication = customAuthenticationManager.authenticate(customAuthentication);
+
+                if (authentication.isAuthenticated()) {
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    filterChain.doFilter(request, response); // Only when authentication worked
+                    return;
+                }
+            }
+
+            // Default UserAndPasswordAuthentication logic
+            filterChain.doFilter(request, response);
+        }
+    }
+    ```
+    Como se puede ver, la clase de filtro ha sido ligeramente modificada para seguir ciertos pasos importantes: Primero buscamos crear una autenticación personalizada que será la utilizada por el AuthenticationManger que nosotros creemos, posterior a esto y recibir la respuesta, verificaremos si la persona fue autenticada existosamente, si es así, se enviará la solicitud al siguiente filtro en la cadena.
+
+    3.2 Crear la clase de `CustomAuthenticationManager` que se encargará de autenticar al usuario con el proceso que hayamos especificado en el filtro.
+
+    ```java
+    public class CustomAuthenticationManager implements AuthenticationManager{
+        
+        @Override
+        public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+            return null;
+        }
+    }
+    ```
+
+    3.3 Creamos la clase `CustomAuthentication` que implementa a Authentication, esta representará en cierto momento al objeto autenticador que se enviará al AuthenticationManager.
+
+    ```java
+    @AllArgsConstructor
+    @Setter
+    @Getter
+    public class CustomAuthentication implements Authentication{
+
+        private final boolean authentication;
+        private final String key;
+
+        @Override
+        public boolean isAuthenticated() {
+            return authentication;
+        }
+        
+
+        @Override
+        public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
+            
+        }
+
+        @Override
+        public Collection<? extends GrantedAuthority> getAuthorities() {
+            return null;
+        }
+
+        @Override
+        public String getName() {
+            return null;
+        }
+
+        @Override
+        public Object getCredentials() {
+            return null;
+        }
+
+        @Override
+        public Object getDetails() {
+            return null;
+        }
+
+        @Override
+        public Object getPrincipal() {
+            return null;
+        }
+
+    }
+    ```
+
+    3.4 También es necesario crear un `CustomAuthenticationProvider` que implemente la interfaz `AuthenticationProvider` y que se encargará de autenticar al usuario con el proceso que hayamos especificado en el filtro. En este caso, el usuario debe de mandar una key en el header de la solicitud para poder ser autenticado.
+
+    ```java
+    @Component
+    public class CustomAuthenticationProvider implements AuthenticationProvider{
+        
+        @Value("${custom.key}")
+        private String key;
+
+        @Override
+        public Authentication authenticate(Authentication authentication) throws AuthenticationException{
+            CustomAuthentication customAuthentication = (CustomAuthentication) authentication;
+            String headerKey = customAuthentication.getKey();
+
+            if (key.equals(headerKey)) {
+                return new CustomAuthentication(true, null);
+            }
+
+            throw new BadCredentialsException("Malas credenciales!!");
+        }
+        
+        @Override 
+        public boolean supports(Class<?> authentication) {
+            // De esta manera el CustomAuthenticationManager sabrá cuál AuthProvider usar
+            return CustomAuthentication.class.equals(authentication); 
+        }
+        
+    }
+    ```
+
+    3.5 Por último, es necesario inyectar el `CustomAuthenticationProvider` en el `CustomAuthenticationManager` para que pueda ser utilizado en el proceso de autenticación.
+
+    ```java
+    @Component
+    @AllArgsConstructor
+    public class CustomAuthenticationManager implements AuthenticationManager{
+
+        private CustomAuthenticationProvider customAuthenticationProvider;
+        
+        @Override
+        public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+            if (customAuthenticationProvider.supports(authentication.getClass())) {
+                return customAuthenticationProvider.authenticate(authentication);
+            } // Here you can add other providers
+
+            throw new BadCredentialsException("No se pudo autenticar");
+        }
+    }
+    ```
+
+4. Para observar el correcto funcionamiento y no interrumpir la autenticación que se tenía en el otro lado, es necesario especificar una ruta diferente para el proceso de autenticación personalizado. En este caso, se ha especificado `/customAuth/**` como la ruta para el proceso de autenticación personalizado. Además de eso crearemos un controller que acceda a dicha ruta.
+
+    ```java
+
+    @Controller
+    @RequestMapping("/customAuth/projects")
+    public class ProjectControllerCustomAuth {
+        ...
+    }
+    ```
+
+5. Ya que ahora tenemos un `CustomAuthenticationManager`, es posible que falle la autenticación de los usuarios que se autenticaban con el `UserDetailsService` que habíamos creado anteriormente. Para solucionar esto, es necesario realizar algunos pasos adicionales que conecten los dos tipos de autenticaciones.
+
+    5.1 En el archivo de configuracion donde se encuentran los bean de `UserDetails` debemos añadir un provider personalizado para posteriormente ser verificado por el `AuthenticationManager`.
+
+    ```java
+    @Bean
+    public DaoAuthenticationProvider daoAuthenticationProvider(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userDetailsService);
+        provider.setPasswordEncoder(passwordEncoder);
+        return provider;
+    }
+    ```
+    5.2 En el `CustomAuthenticationManager` debemos inyectar el `DaoAuthenticationProvider` y el `CustomAuthenticationProvider` para que pueda ser utilizado en el proceso de autenticación.
+
+    ```java
+    @Component
+    @AllArgsConstructor
+    public class CustomAuthenticationManager implements AuthenticationManager {
+
+        private final CustomAuthenticationProvider customAuthenticationProvider;
+        private final DaoAuthenticationProvider daoAuthenticationProvider;
+
+        @Override
+        public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+            // Si el tipo de autenticación es compatible con el CustomAuthenticationProvider, lo utilizamos
+            if (customAuthenticationProvider.supports(authentication.getClass())) {
+                return customAuthenticationProvider.authenticate(authentication);
+            }
+            // Si es compatible con el DaoAuthenticationProvider, lo utilizamos
+            else if (daoAuthenticationProvider.supports(authentication.getClass())) {
+                return daoAuthenticationProvider.authenticate(authentication);
+            }
+            // Si ningún proveedor soporta la autenticación, lanzamos una excepción
+            throw new BadCredentialsException("No se pudo autenticar");
+        }
+    }
+    ```
+
+    5.3 Finalmente, añadiremos una nueva modificación al filter Chain, de manera que las solicitudes que empiecen con /customAuth/ se autentiquen con el `CustomAuthenticationManager` y las demás solicitudes se autentiquen con el `DaoAuthenticationProvider`.
+
+    ```java
+    @Configuration
+    @AllArgsConstructor
+    public class SecurityConfig {
+
+        private final CustomAuthenticationFilter customAuthenticationFilter;
+        private final CustomAuthenticationManager customAuthenticationManager;
+
+        // Autenticación personalizada
+        @Bean
+        public SecurityFilterChain customAuthFilterChain(HttpSecurity http) throws Exception {
+            return http
+                .securityMatcher("/customAuth/**")  // Aplica solo a rutas que comienzan con /customAuth
+                .authenticationManager(customAuthenticationManager)
+                .addFilterBefore(customAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .authorizeHttpRequests(auth -> auth
+                    .anyRequest().authenticated()
+                )
+                .build();
+        }
+
+        // Autenticación por defecto
+        @Bean
+        public SecurityFilterChain defaultFilterChain(HttpSecurity http) throws Exception {
+            return http
+                    .securityMatcher("/**")  // Aplica a todas las demás rutas
+                    .authenticationManager(customAuthenticationManager)
+                    .authorizeHttpRequests(auth -> auth
+                                    .anyRequest().authenticated()
+                    )
+                    .httpBasic(withDefaults()) // Autenticación básica
+                    .formLogin(withDefaults()) // Autenticación por formulario
+                    .build();
+        }
+    }
+    ```
+6. Ahora, si intentamos acceder a la ruta `/customAuth/projects` y enviamos una key en el header de la solicitud, podremos ver que el proceso de autenticación personalizado se ejecuta y que podemos acceder a la ruta sin problemas. Y si intentamos acceder a la ruta `/projects` y enviamos un usuario y contraseña, podremos ver que el proceso de autenticación por defecto se ejecuta y que podemos acceder a la ruta sin problemas.
+
+*Morí :c*
 
 
 ### Ilustraciones de referencia
