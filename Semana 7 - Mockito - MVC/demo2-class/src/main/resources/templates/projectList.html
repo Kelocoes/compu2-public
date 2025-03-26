@@ -1,0 +1,27 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Project List</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body>
+    <h1 class="text-4xl font-bold text-center">
+        Project List
+    </h1>
+
+    <form th:action="@{/projects}" method="post">
+        <input type="text" name="name"/>
+        <input type="date" name="dateCreated"/>
+        <button type="submit">Save project</button>
+    </form>
+
+    <p th:text="${message}">Mensaje por defecto</p>
+    <div th:each="project : ${projects}">
+        <p th:text="${project.id}">Project Id</p>
+        <p th:text="${project.name}">Project name</p>
+    </div>
+
+</body>
+
+</html>
