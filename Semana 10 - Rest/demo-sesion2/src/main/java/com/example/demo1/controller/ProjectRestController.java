@@ -7,6 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo1.dto.Projects.ProjectOutDTO;
+import com.example.demo1.dto.Tasks.TaskOutDTO;
+import com.example.demo1.mappers.ProjectMapper;
 import com.example.demo1.model.Project;
 import com.example.demo1.service.IProjectService;
 
@@ -27,6 +30,9 @@ public class ProjectRestController {
     @Autowired
     private IProjectService projectService;
 
+    @Autowired
+    private ProjectMapper projectMapper;
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getProjectById(@PathVariable Long id) {
         return projectService.findById(id)
@@ -40,9 +46,34 @@ public class ProjectRestController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Project>> getProjects(@RequestParam(required = false) String name) {
+    public ResponseEntity<List<ProjectOutDTO>> getProjects(@RequestParam(required = false) String name) {
         List<Project> projects = (name != null) ? projectService.findByNameParam(name) : projectService.findAll();
-        return projects.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(projects);
+        // Manual way to map Project to ProjectAbstractDTO
+        // List<ProjectOutDTO> projectOutDTOs = projects.stream().map(project -> {
+        //     ProjectOutDTO dto = new ProjectOutDTO();
+        //     dto.setId(project.getId());
+        //     dto.setName(project.getName());
+        //     dto.setTasks(
+        //         project.getTasks().stream().map(task -> {
+        //             TaskOutDTO taskOutDTO = new TaskOutDTO();
+        //             taskOutDTO.setId(task.getId());
+        //             taskOutDTO.setName(task.getName());
+        //             taskOutDTO.setDescription(task.getDescription());
+        //             taskOutDTO.setDateCreated(task.getDateCreated());
+        //             taskOutDTO.setDueDate(task.getDueDate());
+        //             taskOutDTO.setStatus(task.getStatus().toString());
+        //             return taskOutDTO;
+        //         }).toArray(TaskOutDTO[]::new)
+        //     );
+        //     return dto;
+        // }).toList();
+
+        // Using mappers
+        List<ProjectOutDTO> projectOutDTOsMapper = projects.stream()
+                .map(project -> projectMapper.toProjectOutDTO(project))
+                .toList();
+
+        return projects.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(projectOutDTOsMapper);
     }
 
     @PutMapping
