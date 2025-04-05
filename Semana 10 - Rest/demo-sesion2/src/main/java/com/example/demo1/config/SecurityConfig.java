@@ -3,6 +3,7 @@ package com.example.demo1.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -23,22 +24,36 @@ public class SecurityConfig {
     private final CustomAuthenticationFilter customAuthenticationFilter;
     private final CustomAuthenticationManager customAuthenticationManager;
 
-    // Autenticación personalizada con un solo filer chain
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain statelessSecurityFilterChain(HttpSecurity http) throws Exception {
         return http
+            .securityMatcher("/customAuth/**") // Aplica esta configuración solo a las rutas /customAuth/**
             .cors(t -> t.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf
-                .ignoringRequestMatchers("/customAuth/**") // Desactiva CSRF solo para rutas que coincidan con /customAuth/**
+                .ignoringRequestMatchers("/customAuth/**") // Desactiva CSRF solo para estas rutas
             )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/customAuth/**").authenticated()
-                .anyRequest().authenticated()
+                .anyRequest().authenticated() // Todas las rutas bajo /customAuth/** requieren autenticación
             )
+            .sessionManagement(t -> t.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless para estas rutas
             .authenticationManager(customAuthenticationManager)
             .addFilterBefore(customAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-            .httpBasic(withDefaults()) // Configuración básica para todas las rutas
+            .httpBasic(withDefaults()) // Configuración básica
+            .build();
+    }
+
+    @Bean
+    public SecurityFilterChain statefulSecurityFilterChain(HttpSecurity http) throws Exception {
+        return http
+            .securityMatcher("/**") // Aplica esta configuración al resto de las rutas
+            .cors(withDefaults())
+            .csrf(withDefaults()) // CSRF habilitado para rutas fuera de /customAuth/**
+            .authorizeHttpRequests(auth -> auth
+                .anyRequest().authenticated() // Todas las demás rutas requieren autenticación
+            )
+            .sessionManagement(t -> t.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)) // Stateful para estas rutas
             .formLogin(form -> form.defaultSuccessUrl("/projects", true)) // Redirigir a /projects después de iniciar sesión
+            .httpBasic(withDefaults()) // Configuración básica
             .build();
     }
 
