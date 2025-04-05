@@ -9,7 +9,7 @@ import com.example.demo1.model.Project;
 
 public interface IProjectService {
 
-    Iterable<Project> findAll();
+    List<Project> findAll();
     
     Optional<Project> findById(Long id);
 
@@ -30,4 +30,6 @@ public interface IProjectService {
     List<Project> findByIdIn(List<Long> ids);
 
     List<Project> findByNameParam(String name);
+
+    Long deleteById(Long id);
 }

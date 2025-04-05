@@ -37,7 +37,7 @@ public class ProjectServiceImpl implements IProjectService{
     }
 
     @Override
-    public Iterable<Project> findAll() {
+    public List<Project> findAll() {
         return projectRepository.findAll();
     }
 
@@ -98,5 +98,11 @@ public class ProjectServiceImpl implements IProjectService{
     @Override
     public List<Project> findByNameParam(String name) {
         return projectRepository.findByNameParam(name);
+    }
+
+    @Override
+    public Long deleteById(Long id) {
+        projectRepository.deleteById(id);
+        return id;
     }
 }

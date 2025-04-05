@@ -3,6 +3,8 @@ package com.example.demo1.model;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -47,6 +49,7 @@ public class Task {
 
     @ManyToOne
     @JoinColumn(name = "project_id")
+    @JsonIgnore
     private Project project;
 
     @OneToMany(mappedBy = "task", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

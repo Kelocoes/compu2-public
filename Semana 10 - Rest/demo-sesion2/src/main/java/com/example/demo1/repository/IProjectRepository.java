@@ -47,4 +47,6 @@ public interface IProjectRepository extends JpaRepository<Project, Long> {
 
     @Query("SELECT p FROM Project p WHERE p.name = :name")
     List<Project> findByNameParam(@Param("name") String name);
+
+    void deleteById(Long id);
 }
