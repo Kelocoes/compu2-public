@@ -1,0 +1,11 @@
+2025-03-31 18:42:43.017  INFO 30572 --- [demo1] [main] c.example.demo1.Demo1ApplicationTests    : Starting Demo1ApplicationTests using Java 21.0.6 with PID 30572 (started by GlobE in C:\Users\GlobE\Desktop\Maestria\Compunet 2\compu2-public\Semana 9 - Security MVC\class\demo-sesion2)
+2025-03-31 18:42:43.022 DEBUG 30572 --- [demo1] [main] c.example.demo1.Demo1ApplicationTests    : Running with Spring Boot v3.4.3, Spring v6.2.3
+2025-03-31 18:42:43.023  INFO 30572 --- [demo1] [main] c.example.demo1.Demo1ApplicationTests    : The following 1 profile is active: "test"
+2025-03-31 18:42:46.759  WARN 30572 --- [demo1] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-03-31 18:42:47.245  WARN 30572 --- [demo1] [main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: eea7d4d6-1ae7-45cd-9f8a-618d716114ec
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2025-03-31 18:42:47.422  INFO 30572 --- [demo1] [main] c.example.demo1.Demo1ApplicationTests    : Started Demo1ApplicationTests in 4.677 seconds (process running for 5.585)
