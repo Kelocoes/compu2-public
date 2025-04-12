@@ -7,6 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
+import com.example.demo1.config.providers.CustomAuthenticationJwtProvider;
 import com.example.demo1.config.providers.CustomAuthenticationProvider;
 
 import lombok.AllArgsConstructor;
@@ -17,6 +18,7 @@ public class CustomAuthenticationManager implements AuthenticationManager {
 
     private final CustomAuthenticationProvider customAuthenticationProvider;
     private final DaoAuthenticationProvider daoAuthenticationProvider;
+    private final CustomAuthenticationJwtProvider customAuthenticationJwtProvider;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -27,6 +29,10 @@ public class CustomAuthenticationManager implements AuthenticationManager {
         // Si es compatible con el DaoAuthenticationProvider, lo utilizamos
         else if (daoAuthenticationProvider.supports(authentication.getClass())) {
             return daoAuthenticationProvider.authenticate(authentication);
+        }
+        // Si es compatible con el CustomAuthenticationJwtProvider, lo utilizamos
+        else if (customAuthenticationJwtProvider.supports(authentication.getClass())) {
+            return customAuthenticationJwtProvider.authenticate(authentication);
         }
         // Si ningún proveedor soporta la autenticación, lanzamos una excepción
         throw new BadCredentialsException("No se pudo autenticar");

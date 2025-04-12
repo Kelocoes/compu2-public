@@ -274,24 +274,24 @@ El servicio de JWT se encargará de la generación y validación del token JWT. 
 
         private String buildToken(User user, Worker worker, long expirationTime, Authentication auth) {
             return Jwts.builder()
-                    .id(user.getId().toString())
-                    .claims(Map.of(
-                        "username", user.getUsername(),
-                        "email", user.getEmail(),
-                        "name", worker.getName(),
-                        "lastname", worker.getLastname(),
-                        "documentId", worker.getDocumentId(),
-                        "userId", user.getId().toString(),
-                        "workerId", worker.getId().toString(),
-                        "authorities", auth.getAuthorities().stream()
-                            .map(ga -> ga.getAuthority())
-                            .toList()
-                    ))
-                    .subject(user.getUsername())
-                    .issuedAt(new Date(System.currentTimeMillis()))
-                    .expiration(new Date(System.currentTimeMillis() + expirationTime))
-                    .signWith(getSignInKey())
-                    .compact();
+                .id(user.getId().toString())
+                .claims(Map.of(
+                    "username", user.getUsername(),
+                    "email", user.getEmail(),
+                    "name", worker.getName(),
+                    "lastname", worker.getLastname(),
+                    "documentId", worker.getDocumentId(),
+                    "userId", user.getId().toString(),
+                    "workerId", worker.getId().toString(),
+                    "authorities", auth != null && auth.getAuthorities() != null ? auth.getAuthorities().stream()
+                        .map(ga -> ga.getAuthority())
+                        .toList() : List.of()
+                ))
+                .subject(user.getUsername())
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + expirationTime))
+                .signWith(getSignInKey())
+                .compact();
         }
 
         private SecretKey getSignInKey() {
@@ -382,4 +382,170 @@ De esta manera si el usuario ingresa correctamente, se le generará un token JWT
 
 #### 4.9 Uso de token JWT en endpoints restringidos
 
-Combinando los filtros que actualmente existen en la aplicación, vamos a proteger los endpoints de la aplicación para que solo puedan ser accedidos por usuarios autenticados. De manera que si algún usuario desea ingresar a un endpoint que haga match con `/customAuth/api/private/**`, se le solicitará el token JWT en el header de la petición. Para esto, es necesario agregar el siguiente código en la clase `SecurityConfig`:
+Combinando los filtros que actualmente existen en la aplicación, vamos a proteger los endpoints de la aplicación para que solo puedan ser accedidos por usuarios autenticados. Anteriormente ya teníamos 3 formas de autenticarnos: Por BasicAuth, por un formulario y por medio de una api key, ahora agregaremos un provider para que pueda autenticarse por medio de un token JWT.
+
+Si a este punto tenemos la creación de nuestro propio authentication manager y los respectivos providers, solamente necesitaremos modificar dicha lógica y agregar el nuevo método de autenticación.
+
+##### 4.9.1 Modificación del authenticationFilter actual
+
+```java
+    @Component
+    public class CustomAuthenticationFilter extends OncePerRequestFilter {
+
+        @Autowired
+        private CustomAuthenticationManager customAuthenticationManager;
+
+        @Value("${app.security.jwt.token-prefix}")
+        private String tokenPrefix;
+
+        @Value("${app.security.jwt.header-string}")
+        private String headerString;
+
+        @Override
+        protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+                throws ServletException, IOException {
+
+            Authentication authentication = null;
+
+            String key = request.getHeader("key");
+            if (key != null) {
+                // Custom authentication logic with api key
+                CustomAuthentication customAuthentication = new CustomAuthentication(false, key);
+                authentication = customAuthenticationManager.authenticate(customAuthentication);
+            } else if (request.getHeader(headerString) != null && request.getHeader(headerString).startsWith(tokenPrefix)) {
+                // Custom authentication logic with JWT
+                String token = request.getHeader(headerString).substring(tokenPrefix.length());
+                CustomAuthenticationJwt customAuthentication = new CustomAuthenticationJwt(true, token);
+                authentication = customAuthenticationManager.authenticate(customAuthentication);
+            }
+
+            if (authentication != null && authentication.isAuthenticated()) {
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+
+            filterChain.doFilter(request, response);
+        }
+    }
+```
+
+##### 4.9.2 Modificación del authenticationManager actual
+
+```java
+    @Component
+    @AllArgsConstructor
+    public class CustomAuthenticationManager implements AuthenticationManager {
+
+        private final CustomAuthenticationProvider customAuthenticationProvider;
+        private final DaoAuthenticationProvider daoAuthenticationProvider;
+        private final CustomAuthenticationJwtProvider customAuthenticationJwtProvider;
+
+        @Override
+        public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+            // Si el tipo de autenticación es compatible con el CustomAuthenticationProvider, lo utilizamos
+            if (customAuthenticationProvider.supports(authentication.getClass())) {
+                return customAuthenticationProvider.authenticate(authentication);
+            }
+            // Si es compatible con el DaoAuthenticationProvider, lo utilizamos
+            else if (daoAuthenticationProvider.supports(authentication.getClass())) {
+                return daoAuthenticationProvider.authenticate(authentication);
+            }
+            // Si es compatible con el CustomAuthenticationJwtProvider, lo utilizamos
+            else if (customAuthenticationJwtProvider.supports(authentication.getClass())) {
+                return customAuthenticationJwtProvider.authenticate(authentication);
+            }
+            // Si ningún proveedor soporta la autenticación, lanzamos una excepción
+            throw new BadCredentialsException("No se pudo autenticar");
+        }
+    }
+```
+
+##### 4.9.3 Creación de clase Authentication para JWT
+
+Este apartado es opcional en muchas de las configuraciones de seguridad en JWT, pero en nuestro caso es viable ya que hicimos nuestro propio AuthenticationManager con sus respectivos AuthenticationProviders.
+
+```java
+    @AllArgsConstructor
+    @Setter
+    @Getter
+    public class CustomAuthenticationJwt implements Authentication{
+
+        private final boolean authentication;
+        private final String token;
+
+        @Override
+        public boolean isAuthenticated() {
+            return authentication;
+        }
+        
+
+        @Override
+        public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
+            
+        }
+
+        @Override
+        public Collection<? extends GrantedAuthority> getAuthorities() {
+            return null;
+        }
+
+        @Override
+        public String getName() {
+            return null;
+        }
+
+        @Override
+        public Object getCredentials() {
+            return null;
+        }
+
+        @Override
+        public Object getDetails() {
+            return null;
+        }
+
+        @Override
+        public Object getPrincipal() {
+            return null;
+        }
+
+    }
+```
+
+##### 4.9.4 Creación del authenticationProvider
+
+```java
+    @Component
+    public class CustomAuthenticationJwtProvider implements AuthenticationProvider{
+        
+        @Autowired
+        private IJwtService jwtService;
+
+        @Override
+        public Authentication authenticate(Authentication authentication) throws AuthenticationException{
+            // Verificamos si el token es válido
+            String token = ((CustomAuthenticationJwt) authentication).getToken().replace("Bearer ", "").trim();
+
+
+            String username = jwtService.extractUsername(token);
+            if (username != null && !jwtService.isTokenExpired(token)) {
+                // Si el token es válido, devolvemos la autenticación
+                return new CustomAuthenticationJwt(true, token);
+            }
+
+            throw new BadCredentialsException("Malas credenciales en JWT!!");
+        }
+        
+        @Override 
+        public boolean supports(Class<?> authentication) {
+            // De esta manera el CustomAuthenticationManager sabrá cuál AuthProvider usar
+            return CustomAuthenticationJwt.class.equals(authentication); 
+        }
+        
+    }
+```
+
+Con lo anterior, ya es posible probar los endpoints que anteriormente requerían una API Key, utilizando ahora un token JWT válido y no expirado.
+
+Es importante tener en cuenta que, en escenarios donde no se implementan múltiples métodos de autenticación, pueden omitirse varios de los pasos descritos en esta y en la guía anterior.
+
+Finalmente, queda como responsabilidad del estudiante implementar los apartados restantes relacionados con la autorización y la restricción de rutas con base en los roles o authorities definidos.

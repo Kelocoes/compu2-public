@@ -1,6 +1,7 @@
 package com.example.demo1.service.impl;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.crypto.SecretKey;
@@ -42,9 +43,9 @@ public class JwtService implements IJwtService {
                     "documentId", worker.getDocumentId(),
                     "userId", user.getId().toString(),
                     "workerId", worker.getId().toString(),
-                    "authorities", auth.getAuthorities().stream()
+                    "authorities", auth != null && auth.getAuthorities() != null ? auth.getAuthorities().stream()
                         .map(ga -> ga.getAuthority())
-                        .toList()
+                        .toList() : List.of()
                 ))
                 .subject(user.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
