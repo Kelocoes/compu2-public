@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Página de Inicio</title>
+</head>
+<body>
+    <h1 th:text="${title}">Mensaje por defecto</h1>
+
+    <div th:if="${project != null}">
+        <h2>Project Details</h2>
+        <p>ID: <span th:text="${project.id}">Project ID</span></p>
+        <p>Name: <span th:text="${project.name}">Project Name</span></p>
+        <p>DateCreated: <span th:text="${project.dateCreated}">Project DateCreated</span></p>
+    </div>
+    <div th:if="${project == null}">
+        <h2>No Projects Found</h2>
+    </div>
+    <p>
+        <a th:href="@{'/projects'}">Back to Projects List</a>
+    </p>
+</body>
+</html>
