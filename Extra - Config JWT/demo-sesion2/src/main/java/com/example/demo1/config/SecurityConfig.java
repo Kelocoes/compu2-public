@@ -2,6 +2,7 @@ package com.example.demo1.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -25,6 +26,7 @@ public class SecurityConfig {
     private final CustomAuthenticationManager customAuthenticationManager;
 
     @Bean
+    @Order(1)
     public SecurityFilterChain statelessSecurityFilterChain(HttpSecurity http) throws Exception {
         return http
             .securityMatcher("/customAuth/**") // Aplica esta configuración solo a las rutas /customAuth/**
@@ -33,6 +35,7 @@ public class SecurityConfig {
                 .ignoringRequestMatchers("/customAuth/**") // Desactiva CSRF solo para estas rutas
             )
             .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/customAuth/api/public/**").permitAll() // Permitir acceso a rutas públicas
                 .anyRequest().authenticated() // Todas las rutas bajo /customAuth/** requieren autenticación
             )
             .sessionManagement(t -> t.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless para estas rutas
@@ -43,6 +46,7 @@ public class SecurityConfig {
     }
 
     @Bean
+    @Order(2)
     public SecurityFilterChain statefulSecurityFilterChain(HttpSecurity http) throws Exception {
         return http
             .securityMatcher("/**") // Aplica esta configuración al resto de las rutas

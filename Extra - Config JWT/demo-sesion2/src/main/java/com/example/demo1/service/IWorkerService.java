@@ -11,5 +11,7 @@ public interface IWorkerService {
 
     Optional<Worker> findById(Long id);
 
+    Optional<Worker> findByUserId(Long userId);
+
     Worker save(Worker worker);
 }

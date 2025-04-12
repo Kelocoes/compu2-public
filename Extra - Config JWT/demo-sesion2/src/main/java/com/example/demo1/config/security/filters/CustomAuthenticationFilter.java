@@ -25,6 +25,7 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+
         String key = request.getHeader("key");
 
         if (key != null) {
@@ -34,12 +35,10 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
 
             if (authentication.isAuthenticated()) {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-                filterChain.doFilter(request, response); // Only when authentication worked
-                return;
             }
         }
 
-        // Default UserAndPasswordAuthentication logic
         filterChain.doFilter(request, response);
     }
 }
+

@@ -23,8 +23,8 @@ INSERT INTO task(name, description, date_created, due_date, status, project_id) 
 INSERT INTO task(name, description, date_created, due_date, status, project_id) VALUES ('Task 10', 'Description for Task 10', '2020-06-13', '2020-07-13', 1, 10);
 
 -- Inserts for user
-INSERT INTO users(username, password, email) VALUES ('user1', 'password1', 'email@email.com');
-INSERT INTO users(username, password, email) VALUES ('admin1', 'password1', 'emailuser@email.com');
+INSERT INTO users(username, password, email) VALUES ('user1', '$2a$12$mZiXumOgpAwjveMC6o2iy.rn31Tr9GJ5w2ErRa9My7kZzZa/2fo1y', 'email@email.com');
+INSERT INTO users(username, password, email) VALUES ('admin1', '$2a$12$mZiXumOgpAwjveMC6o2iy.rn31Tr9GJ5w2ErRa9My7kZzZa/2fo1y', 'emailuser@email.com');
 
 -- Inserts for role
 INSERT INTO role(name) VALUES ('ROLE_USER');

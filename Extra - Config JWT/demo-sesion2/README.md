@@ -36,4 +36,350 @@ Un token JWT consta de tres partes separadas por puntos (.):
 
 Esta guía se enfocará en el proceso de generación y verificación de un accesToken usando JWT, por lo que aspectos de token de refresco no serán tratados en esta guía, sin embargo, su implementación no es complicada y puede ser realizada de forma similar a la implementación del accesToken.
 
+### 4.0 Proyecto base
+
+Si deseas comenzar con el proyecto trabajado en este curso, puedes descargarlo por medio de este [enlace](https://drive.google.com/file/d/17hJJ6hep5PHRg8BF6Dxmkakgk7-Pbbqw/view?usp=sharing).
+
 #### 4.1. Dependencias necesarias
+
+Las siguientes dependencias son necesarias para la implementación de JWT en Spring Boot:
+
+```xml
+    <dependency>
+        <groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt-api</artifactId>
+        <version>0.12.3</version>
+    </dependency>
+    <dependency>
+        <groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt-impl</artifactId>
+        <version>0.12.6</version>
+    </dependency>
+    <dependency>
+        <groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt-jackson</artifactId>
+        <version>0.12.6</version>
+    </dependency>
+```
+
+Recuerda que si deseas instalar dichas dependencias en el contexto de maven puedes hacerlo por medio de la siguiente línea de comandos:
+
+```bash
+    mvn clean install
+```
+
+#### 4.2. Adición de variables de entorno propias de JWT
+
+Para la implementación de JWT es necesario contar con una clave secreta, la cual será utilizada para la firma del token. Adicionalmente, es recomendable contar con un tiempo de expiración para el token, el cual puede ser configurado en milisegundos. Para esto, se recomienda crear un archivo `application.properties` o `application.yml` en la carpeta `src/main/resources` y agregar las siguientes propiedades:
+
+```properties
+    ### JWT example
+    app.security.jwt.secret-key = mySecretKey
+    # 1 Day
+    app.security.jwt.expiration-time = 86400000
+    app.security.jwt.token-prefix = Bearer
+    app.security.jwt.header-string = Authorization
+```
+
+#### 4.3 Creación de controller para procesos de autenticación usando JWT
+
+Los endpoints principales para obtener un token de autenticación serán de inicio de sesión y registro, por lo que es importante crear un controlador público (exento de los filtros de security) que permita la creación de un token JWT. Para esto, se recomienda crear un controlador `AuthController` que contenga los siguientes métodos:
+
+```java
+    @RestController
+    @RequestMapping("/customAuth/api/public/auth")
+    public class AuthController {
+        
+        @Autowired
+        private IAuthService authService;
+
+        @PostMapping("/register")
+        public ResponseEntity<TokenResponseDTO> register(@RequestBody RegisterRequestDTO request) {
+            TokenResponseDTO token = authService.register(request);
+            return ResponseEntity.ok(token);
+        }
+
+        @PostMapping("/login")
+        public ResponseEntity<TokenResponseDTO> login(@RequestBody LoginRequestDTO request) {
+            TokenResponseDTO token = authService.login(request);
+            return ResponseEntity.ok(token);
+        }
+    }
+```
+
+#### 4.4 Creación de DTOs para el proceso de autenticación
+
+Para el proceso de autenticación, es necesario crear dos DTOs que permitan la creación de un token JWT. Estos DTOs son `LoginRequestDTO`, `TokenResponseDTO` y `RegisterRequestDTO`. A continuación se presentan los DTOs necesarios para el proceso de autenticación:
+
+```java
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public class TokenResponseDTO{
+        
+        String accessToken;
+        String tokenType;
+    }
+
+    @Getter
+    @Setter
+    public class LoginRequestDto {
+        private String username;
+        private String password;
+    }
+
+    @Getter
+    @Setter
+    public class RegisterRequestDTO {
+    
+        private String username;
+        private String email;
+        private String password;
+        private String name;
+        private String lastname;
+        private String documentId;
+    }
+```
+
+#### 4.5 Creación de servicio para el proceso de autenticación
+
+Posterior a especificar una base de controladores y respuestas esperadas, es necesario crear el servicio de autenticación, el cual se encargará de realizar los procesos de generación de tokens, guardado de información en base de datos y validación de campos.
+
+```java
+    public interface IAuthService {
+
+        TokenResponseDTO register(RegisterRequestDTO request);
+
+        TokenResponseDTO login(LoginRequestDTO request);
+    }
+
+    @Service
+    public class AuthService implements IAuthService {
+
+        @Override
+        public TokenResponseDTO register(RegisterRequestDTO request) {
+            // Logic for user registration
+            return new TokenResponseDTO();
+        }
+
+        @Override
+        public TokenResponseDTO login(LoginRequestDTO request) {
+            // Logic for user login
+            return new TokenResponseDTO();
+        }
+        
+    }
+```
+
+##### 4.5.1 Implementación de la lógica de registro
+
+Primero empezaremos por el apartado de registro, en el cual se validará la información del usuario y se generará un token JWT. Para esto, es necesario crear un método `register` que realice las siguientes acciones:
+- Validar la información del usuario. (By yourself)
+- Crear un nuevo usuario en la base de datos.
+- Generar un token JWT.
+
+```java
+    @Service
+    @AllArgsConstructor
+    public class AuthService implements IAuthService {
+
+        private final IUserService userService;
+
+        private final IWorkerService workerService;
+
+        private final JwtService jwtService;
+
+        private final PasswordEncoder passwordEncoder;
+
+        private final AuthenticationManager authenticationManager;
+
+        @Override
+        public TokenResponseDTO register(RegisterRequestDTO request) {
+            User user = new User();
+            user.setUsername(request.getUsername());
+            user.setEmail(request.getEmail());
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+            Worker worker = new Worker();
+            worker.setName(request.getName());
+            worker.setLastname(request.getLastname());
+            worker.setDocumentId(request.getDocumentId());
+            worker.setUser(user);
+
+            User userSaved = userService.save(user);
+            Worker workerSaved = workerService.save(worker);
+
+            String accessToken = jwtService.generateAccessToken(userSaved, workerSaved);
+
+            return new TokenResponseDTO(accessToken, "Bearer");
+        }
+    }
+```
+
+Por supuesto que es necesario realizar el almacenamiento de la información de registro en la base de datos, por lo que usaremos las dependencias de `UserService` y `WorkerService`. Adicional a esto, es un buen momento de empezar a guardar las contraseñas encriptadas, por lo que la dependencia de `PasswordEncoder` será utilizada al momento de asignar la contraseña del usuario a crear. Para esto, es necesario crear un `@Bean` en la clase de configuración de seguridad que permita la creación del `PasswordEncoder`:
+
+```java
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+``` 
+
+##### 4.5.2 Implementación de la lógica de inicio de sesión
+Para el inicio de sesión, es necesario crear un método `login` que realice las siguientes acciones:
+- Validar la información del usuario. (By yourself)
+- Verificar la contraseña del usuario.
+- Generar un token JWT.
+
+```java
+    public TokenResponseDTO login(LoginRequestDTO request) {
+
+        Authentication auth = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+        );
+
+        User user = userService.findByUsername(request.getUsername())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Worker worker = workerService.findByUserId(user.getId())
+                .orElseThrow(() -> new RuntimeException("Worker not found"));
+        String accessToken = jwtService.generateAccessToken(user, worker, auth);
+
+        return new TokenResponseDTO(accessToken, "Bearer");
+    }
+```
+
+#### 4.6 Creación del servicio de JWT
+El servicio de JWT se encargará de la generación y validación del token JWT. Para esto, es necesario crear una interfaz `IJwtService` y una implementación `JwtService` que contenga los siguientes métodos:
+```java
+    public interface IJwtService {
+        String generateAccessToken(User user, Worker worker, Authentication auth);
+        String extractUsername(String token);
+        boolean isTokenExpired(String token);
+    }
+
+    @Service
+    public class JwtService implements IJwtService {
+
+        @Value("${app.security.jwt.secret-key}")
+        private String secretKey;
+
+        @Value("${app.security.jwt.expiration-time}")
+        private long expirationTime;
+
+        @Override
+        public String generateAccessToken(User user, Worker worker, Authentication auth) {
+            return buildToken(user, worker, expirationTime, auth);
+        }
+
+        private String buildToken(User user, Worker worker, long expirationTime, Authentication auth) {
+            return Jwts.builder()
+                    .id(user.getId().toString())
+                    .claims(Map.of(
+                        "username", user.getUsername(),
+                        "email", user.getEmail(),
+                        "name", worker.getName(),
+                        "lastname", worker.getLastname(),
+                        "documentId", worker.getDocumentId(),
+                        "userId", user.getId().toString(),
+                        "workerId", worker.getId().toString(),
+                        "authorities", auth.getAuthorities().stream()
+                            .map(ga -> ga.getAuthority())
+                            .toList()
+                    ))
+                    .subject(user.getUsername())
+                    .issuedAt(new Date(System.currentTimeMillis()))
+                    .expiration(new Date(System.currentTimeMillis() + expirationTime))
+                    .signWith(getSignInKey())
+                    .compact();
+        }
+
+        private SecretKey getSignInKey() {
+            byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+            return Keys.hmacShaKeyFor(keyBytes);
+        }
+
+        @Override
+        public String extractUsername(String token) {
+            return Jwts.parser()
+                .verifyWith(getSignInKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getSubject();
+        }
+
+        @Override
+        public boolean isTokenExpired(String token) {
+            return Jwts.parser()
+                .verifyWith(getSignInKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getExpiration()
+                .before(new Date());
+        }
+    }
+```
+
+#### 4.7 Modificación de los filtros de seguridad para enpoints públicos
+
+Para que los endpoints de autenticación sean públicos, es necesario modificar la configuración de seguridad para permitir el acceso a estos endpoints sin necesidad de autenticación. Para esto, es necesario modificar la clase `SecurityConfig` y agregar los endpoints públicos en el método `authorizeHttpRequests`:
+
+Ejemplo:
+```java
+    .authorizeHttpRequests(auth -> auth
+        .requestMatchers("/public/**").permitAll() // Permitir acceso a rutas públicas
+        .anyRequest().authenticated() // Todas las rutas bajo /customAuth/** requieren autenticación
+    )
+```
+
+#### 4.8 Prueba de los endpoints de autenticación
+Para probar los endpoints de autenticación, puedes usar Postman o cualquier otra herramienta de prueba de API. A continuación se presentan ejemplos de cómo realizar las pruebas:
+
+```curl
+    curl --location 'http://localhost:8080/customAuth/api/public/auth/register' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{
+    "username": "exampleUser",
+    "email": "example@example.com",
+    "password": "password",
+    "name": "Kevin",
+    "lastname": "Test",
+    "documentId": "123456789"
+    }'
+```
+
+Y la respuesta nos genera este JSON: 
+
+```json
+    {
+        "accessToken": "eyJhbGciOiJIUzM4NCJ9.eyJqdGkiOiIzIiwid29ya2VySWQiOiIzIiwibGFzdG5hbWUiOiJUZXN0IiwidXNlcklkIjoiMyIsInVzZXJuYW1lIjoiZXhhbXBsZVVzZXIiLCJkb2N1bWVudElkIjoiMTIzNDU2Nzg5IiwibmFtZSI6IktldmluIiwiZW1haWwiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwic3ViIjoiZXhhbXBsZVVzZXIiLCJpYXQiOjE3NDQ0OTE2OTMsImV4cCI6MTc0NDU3ODA5M30.sIq7iII6SsBIWl6M8fEWvry3XBh2k1bdHpBEphiRyVD7HwOypF9S3uPdvZvK7Smj",
+        "tokenType": "Bearer"
+    }
+```
+
+Para tener un mayor orden y actualizar las contraseñas de admin y user iniciales, en el archivo `data.sql` vamos a cambiarlo: 
+
+```sql
+    -- Inserts for user
+    INSERT INTO users(username, password, email) VALUES ('user1', '$2a$12$mZiXumOgpAwjveMC6o2iy.rn31Tr9GJ5w2ErRa9My7kZzZa/2fo1y', 'email@email.com');
+    INSERT INTO users(username, password, email) VALUES ('admin1', '$2a$12$mZiXumOgpAwjveMC6o2iy.rn31Tr9GJ5w2ErRa9My7kZzZa/2fo1y', 'emailuser@email.com');
+```
+
+Si deseas validar el endpoint de Login, puedes usar el siguiente comando:
+
+```curl
+    curl --location 'http://localhost:8080/customAuth/api/public/auth/login' \
+    --header 'Content-Type: application/json' \
+    --data '{
+        "username": "exampleUser",
+        "password": "password"
+    }'
+```
+
+De esta manera si el usuario ingresa correctamente, se le generará un token JWT que podrá ser utilizado para acceder a los recursos protegidos de la aplicación. De otro modo recibirá un error 401 (Unauthorized) indicando que las credenciales son incorrectas.
+
+#### 4.9 Uso de token JWT en endpoints restringidos
+
+Combinando los filtros que actualmente existen en la aplicación, vamos a proteger los endpoints de la aplicación para que solo puedan ser accedidos por usuarios autenticados. De manera que si algún usuario desea ingresar a un endpoint que haga match con `/customAuth/api/private/**`, se le solicitará el token JWT en el header de la petición. Para esto, es necesario agregar el siguiente código en la clase `SecurityConfig`:
