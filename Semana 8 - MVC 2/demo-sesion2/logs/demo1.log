@@ -3,3 +3,23 @@
 2025-03-22 13:57:30.441  INFO 4740 --- [demo1] [main] c.example.demo1.Demo1ApplicationTests    : The following 1 profile is active: "test"
 2025-03-22 13:57:33.467  WARN 4740 --- [demo1] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
 2025-03-22 13:57:33.786  INFO 4740 --- [demo1] [main] c.example.demo1.Demo1ApplicationTests    : Started Demo1ApplicationTests in 3.599 seconds (process running for 4.375)
+2025-03-26 16:04:01.365  INFO 24028 --- [demo1] [main] c.example.demo1.Demo1ApplicationTests    : Starting Demo1ApplicationTests using Java 21.0.6 with PID 24028 (started by GlobE in C:\Users\GlobE\Desktop\Maestria\Compunet 2\compu2-public\Semana 8 - MVC 2\demo-sesion2)
+2025-03-26 16:04:01.366 DEBUG 24028 --- [demo1] [main] c.example.demo1.Demo1ApplicationTests    : Running with Spring Boot v3.4.3, Spring v6.2.3
+2025-03-26 16:04:01.367  INFO 24028 --- [demo1] [main] c.example.demo1.Demo1ApplicationTests    : The following 1 profile is active: "test"
+2025-03-26 16:04:05.124  WARN 24028 --- [demo1] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-03-26 16:04:05.598  INFO 24028 --- [demo1] [main] c.example.demo1.Demo1ApplicationTests    : Started Demo1ApplicationTests in 4.546 seconds (process running for 5.507)
+2025-03-26 16:05:20.147  INFO 24944 --- [demo1] [main] c.example.demo1.Demo1ApplicationTests    : Starting Demo1ApplicationTests using Java 21.0.6 with PID 24944 (started by GlobE in C:\Users\GlobE\Desktop\Maestria\Compunet 2\compu2-public\Semana 8 - MVC 2\demo-sesion2)
+2025-03-26 16:05:20.148 DEBUG 24944 --- [demo1] [main] c.example.demo1.Demo1ApplicationTests    : Running with Spring Boot v3.4.3, Spring v6.2.3
+2025-03-26 16:05:20.148  INFO 24944 --- [demo1] [main] c.example.demo1.Demo1ApplicationTests    : The following 1 profile is active: "test"
+2025-03-26 16:05:23.963  WARN 24944 --- [demo1] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-03-26 16:05:24.428  INFO 24944 --- [demo1] [main] c.example.demo1.Demo1ApplicationTests    : Started Demo1ApplicationTests in 4.574 seconds (process running for 5.502)
+2025-03-26 16:22:18.777  INFO 24588 --- [demo1] [main] c.example.demo1.Demo1ApplicationTests    : Starting Demo1ApplicationTests using Java 21.0.6 with PID 24588 (started by GlobE in C:\Users\GlobE\Desktop\Maestria\Compunet 2\compu2-public\Semana 8 - MVC 2\demo-sesion2)
+2025-03-26 16:22:18.778 DEBUG 24588 --- [demo1] [main] c.example.demo1.Demo1ApplicationTests    : Running with Spring Boot v3.4.3, Spring v6.2.3
+2025-03-26 16:22:18.779  INFO 24588 --- [demo1] [main] c.example.demo1.Demo1ApplicationTests    : The following 1 profile is active: "test"
+2025-03-26 16:22:22.739  WARN 24588 --- [demo1] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-03-26 16:22:23.237  INFO 24588 --- [demo1] [main] c.example.demo1.Demo1ApplicationTests    : Started Demo1ApplicationTests in 4.764 seconds (process running for 5.799)
+2025-03-26 18:15:06.872  INFO 23480 --- [demo1] [main] c.example.demo1.Demo1ApplicationTests    : Starting Demo1ApplicationTests using Java 21.0.6 with PID 23480 (started by GlobE in C:\Users\GlobE\Desktop\Maestria\Compunet 2\compu2-public\Semana 8 - MVC 2\demo-sesion2)
+2025-03-26 18:15:06.873 DEBUG 23480 --- [demo1] [main] c.example.demo1.Demo1ApplicationTests    : Running with Spring Boot v3.4.3, Spring v6.2.3
+2025-03-26 18:15:06.873  INFO 23480 --- [demo1] [main] c.example.demo1.Demo1ApplicationTests    : The following 1 profile is active: "test"
+2025-03-26 18:15:10.683  WARN 23480 --- [demo1] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-03-26 18:15:11.196  INFO 23480 --- [demo1] [main] c.example.demo1.Demo1ApplicationTests    : Started Demo1ApplicationTests in 4.633 seconds (process running for 5.664)
