@@ -1,33 +1,35 @@
 import { useEffect, useState } from "react";
 import { getAgents } from "../services/ValorantService";
-import { Box, Card, CardContent, CardMedia, Chip, Modal, Paper, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, CardMedia, Chip, Modal, Paper, Typography } from "@mui/material";
 import Agent from "../components/Agent";
 import CustomAppBar from "../components/CustomAppBar";
 import { useParams } from "react-router";
+import { useQuery } from "@tanstack/react-query";
+import { setSelectedAgent } from "../store/Actions";
+import { useStore } from "@tanstack/react-store";
+import { store } from "../store/Store";
 
 export default function AgentsPage () {
-    const [agents, setAgents] = useState([]);
     const { agentId } = useParams();
-    const [selectedAgent, setSelectedAgent] = useState(null);
+    const selectedAgent = useStore(store, (state) => state.selectedAgent);
     const [open, setOpen] = useState(false);
+    const queryAgents = useQuery({
+        queryKey: ['agents'],
+        queryFn: getAgents
+    })
+
+    if (queryAgents.error) {
+        alert('Error fetching agents');
+    }
 
     useEffect(() => {
-        const fetchAgents = async () => {
-            const response = await getAgents();
-            setAgents(response);
-        }
-
-        fetchAgents();
-    }, []);
-
-    useEffect(() => {
-        if (agentId && agents.length > 0) {
-            const agent = agents.find((agent) => agent.uuid === agentId);
+        if (agentId && queryAgents.data.length > 0) {
+            const agent = queryAgents.data.find((agent) => agent.uuid === agentId);
             if (agent) {
                 setSelectedAgent(agent);
             }
         }
-    }, [agentId, agents]);
+    }, [agentId, queryAgents]);
 
     const handleClickAgent = (agent) => {
         setSelectedAgent(agent);
@@ -48,6 +50,9 @@ export default function AgentsPage () {
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>
                 <Typography variant="h1">Agents Page</Typography>
                 <Typography variant="p">This is the agents page.</Typography>
+                <Button variant="contained" onClick={() => queryAgents.refetch()} sx={{ margin: '20px' }}>
+                    Refresh Agents
+                </Button>
                 <Box sx={{
                     display: 'flex',
                     flexDirection: 'row',
@@ -56,8 +61,9 @@ export default function AgentsPage () {
                     alignItems: 'center',
                     padding: '50px',
                 }}>
-                    { agents.length > 0 && (
-                        agents.map((agent) => {
+                    {queryAgents.isPending && <Typography variant="h4">Loading...</Typography>}
+                    {queryAgents.isSuccess && (
+                        queryAgents.data.map((agent) => {
                             return <Agent key={agent.uuid} agent={agent} handleClickAgent={handleClickAgent} />
                         })
                     )}
